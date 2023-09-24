@@ -26,12 +26,13 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  communities: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Community",
-    },
-  ],
+  stripeCustomerId: {
+    type: String,
+  },
+  stripeStatus: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

@@ -4,7 +4,6 @@ import User from "../models/user.model";
 import { revalidatePath } from "next/cache";
 
 
-
 export async function fetchUser(userId: string) {
     try {
         connectToDB();
@@ -22,6 +21,9 @@ interface Params {
     bio: string;
     image: string;
     path: string;
+    stripeCustomerId: string;
+    stripeSubscriptionId: string;
+    stripeStatus: boolean;
 }
 
 
@@ -31,10 +33,14 @@ export async function updateUser({
     name,
     path,
     username,
-    image
+    image,
+    stripeCustomerId,
+    stripeSubscriptionId,
+    stripeStatus,
 }: Params): Promise<void> {
     try {
         connectToDB();
+        
 
         await User.findOneAndUpdate(
             { id: userId },
@@ -44,6 +50,10 @@ export async function updateUser({
                 bio,
                 image,
                 onboarded: true,
+                stripeCustomerId: stripeCustomerId,
+                stripeSubscriptionId: stripeSubscriptionId,
+                stripeStatus: stripeStatus,
+
             },
             { upsert: true }
         );

@@ -24,6 +24,7 @@ import { useUploadThing } from "@/lib/uploadthing";
 import { isBase64Image } from "@/lib/utils";
 import { updateUser } from '@/lib/actions/user.actions';
 import { usePathname, useRouter } from 'next/navigation';
+import Stripe from 'stripe';
 
 
 interface Props {
@@ -36,9 +37,10 @@ interface Props {
         image?: String;
     },
     btnTitle: String;
+    stripeCustomerId: String;
 }
 
-const AccountProfile = ({ user, btnTitle }: Props) => {
+const AccountProfile = ({ user, btnTitle, stripeCustomerId }: Props) => {
     const [files, setFiles] = useState<File[]>([]);
     const router = useRouter();
     const pathname = usePathname();
@@ -89,6 +91,7 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
                 values.profile_photo = imgRes[0].fileUrl;
             }
         }
+        
 
         await updateUser({
             name: values.name,
@@ -97,6 +100,9 @@ const AccountProfile = ({ user, btnTitle }: Props) => {
             userId: `${user.id}`,
             bio: values.bio,
             image: values.profile_photo,
+            stripeCustomerId: `${stripeCustomerId}`,
+            stripeSubscriptionId: '',
+            stripeStatus: false,
         });
 
         if (pathname === "/profile/edit") {
